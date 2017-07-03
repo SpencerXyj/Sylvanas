@@ -15,14 +15,7 @@ class IDMustBePostiveInt extends BaseValidate {
     ];
 
     protected $message = [
-        "id.require" => "id must be require"
+        "id.require" => "id must be require",
+        "id.isPositiveInteger" => "id must be Positive Integer"
     ];
-
-    protected function isPositiveInteger($value,$rule='',$data='',$field=''){
-        if(is_numeric($value) && is_int($value + 0) && ($value + 0) > 0){
-            return true;
-        }else{
-            return $field." must be Positive Integer";
-        }
-    }
 }

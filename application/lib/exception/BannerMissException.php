@@ -11,6 +11,6 @@ namespace app\lib\exception;
 
 class BannerMissException extends BaseException {
     public $code = 404;
-    public $msg = "Banner is not exists";
+    public $msg = "parameter error";
     public $errorCode = 40000;
 }

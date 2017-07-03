@@ -9,6 +9,14 @@
 namespace app\api\controller\v1;
 
 
-class Theme {
+use app\api\validate\IDCollection;
 
+class Theme {
+    /**
+     * @url theme/?ids=id1,id2,id3....
+     * return themes
+     */
+    public function getSimpleList($ids = ''){
+         return (new IDCollection())->goCheck();
+    }
 }
