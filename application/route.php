@@ -13,3 +13,4 @@ use think\Route;
 
 Route::get('api/:version/banner/:id','api/:version.Banner/getBanner');
 Route::get('api/:version/theme','api/:version.Theme/getSimpleList');
+Route::get('api/:version/ip_white','api/:version.Banner/getIPWhiteList');
