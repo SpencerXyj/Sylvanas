@@ -17,7 +17,6 @@ class BaseModel extends Model {
         if ($data['from'] == 1) {
             $img_prefix = config("setting.img_prefix");
             $value = $img_prefix . $value;
-
         }
         return $value;
     }

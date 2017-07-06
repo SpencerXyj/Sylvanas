@@ -9,6 +9,11 @@
 namespace app\api\model;
 
 
-class Product {
+class Product extends BaseModel {
+    protected $hidden = ['update_time', 'delete_time', 'create_time', 'pivot'];
+
+    public function getMainImgUrlAttr($name, $value) {
+        return self::prefixImgUrl($name, $value);
+    }
 
 }
