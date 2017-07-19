@@ -30,3 +30,59 @@
 80001 订单中的商品不存在，可能已被删除
 80002 订单还未支付，却尝试发货
 80003 订单已支付过
+
+
+
+以下是一些注意事项
+
+database.php   'resultset_type' => 'collection'  将返回数据集
+
+config.php     'app_debug' => 'true'  生产环境改为false
+
+                'default_return_type' => 'json' 输出类型
+
+                重写Handler 修改
+                'exception_handle'       => 'app\lib\exception\ExceptionHandler',
+
+                //log
+                'type'  => 'test',  会失效  代码手动修改后起效  记录日志
+
+
+
+public/index.php
+    SQL日志
+    \think\Log::init([
+      "type" => "File",
+      "path" => LOG_PATH,
+      "level" => ["sql"],
+    ]);
+    日志目录
+    define('LOG_PATH', __DIR__ . '/../log/');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
