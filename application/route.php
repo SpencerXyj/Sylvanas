@@ -17,3 +17,4 @@ Route::get('api/:version/theme/:id'                     ,   'api/:version.Theme/
 Route::get('api/:version/product/recent'                ,   'api/:version.Product/getRecent');
 Route::get('api/:version/product/by_category/:id'       ,   'api/:version.Product/getAllInCategory');
 Route::get('api/:version/category/all'                  ,   'api/:version.Category/getAllCategories');
+Route::post('api/:version/token/user'                   ,   'api/:version.Token/getToken');
