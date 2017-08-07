@@ -20,6 +20,9 @@ class Token {
 
         $token = $userToken->get();
 
-        return $token;
+        return [
+            'token' => $token,
+            'expire_in' => config('setting.token_expire_in'),
+        ];
     }
 }

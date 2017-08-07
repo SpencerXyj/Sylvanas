@@ -16,31 +16,31 @@
  * @param int $httpCode 返回状态码
  * @param mixed
  */
-function curl_get($url,&$httpCode = 0){
+function curl_get($url, &$httpCode = 0) {
     $ch = curl_init();
-    curl_setopt($ch,CURLOPT_URL,$url);
-    curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
     //不做证书校验，部署在linux环境下请改位true
-    curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
     $file_contents = curl_exec($ch);
-    $httpCode = curl_getinfo($ch,CURLINFO_HTTP_CODE);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
     return $file_contents;
 }
 
-function curl_post($url,array $params = array()){
+function curl_post($url, array $params = array()) {
     $data_string = json_encode($params);
     $ch = curl_init();
-    curl_setopt($ch,CURLOPT_URL,$url);
-    curl_setopt($ch,CURLOPT_HEADER,0);
-    curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,10);
-    curl_setopt($ch,CURLOPT_POST,1);
-    curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
-    curl_setopt($ch,CURLOPT_POSTFIELDS,$data_string);
-    curl_setopt($ch,CURLOPT_HTTPHEADER,
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,
         array(
             'Content-Type: application/json'
         )
@@ -55,16 +55,16 @@ function curl_post($url,array $params = array()){
  * @param $rawData
  * @return mixed
  */
-function curl_post_raw($url,$rawData){
+function curl_post_raw($url, $rawData) {
     $ch = curl_init();
-    curl_setopt($ch,CURLOPT_URL,$url);
-    curl_setopt($ch,CURLOPT_HEADER,0);
-    curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,10);
-    curl_setopt($ch,CURLOPT_POST,1);
-    curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
-    curl_setopt($ch,CURLOPT_POSTFIELDS,$rawData);
-    curl_setopt($ch,CURLOPT_HTTPHEADER,
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $rawData);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,
         array(
             'Content-Type: text'
         )
@@ -78,14 +78,15 @@ function curl_post_raw($url,$rawData){
  * @param $length
  * @return null|string
  */
-function getRandChar($length){
+function getRandChars($length) {
     $str = null;
     $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
-    $max = strlen($strPol)-1;
+    $max = strlen($strPol) - 1;
 
-    for ($i=0;$i<$length;$i++){
-        $str .= $strPol[rand(0,$max)];
+    for ($i = 0; $i < $length; $i++) {
+        $str .= $strPol[rand(0, $max)];
     }
 
     return $str;
 }
+

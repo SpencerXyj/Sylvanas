@@ -22,10 +22,10 @@ class Product {
      * @throws ProductException
      * @url product/recent
      */
-    public function getRecent($count = 15){
+    public function getRecent($count = 15) {
         (new Count())->goCheck();
         $products = productModel::getMostRecent($count);
-        if($products->isEmpty()){
+        if ($products->isEmpty()) {
             throw new ProductException();
         }
         $products = $products->hidden(['summary']);
@@ -38,12 +38,22 @@ class Product {
      * @throws CategoryException
      * @url product/by_category/:id
      */
-    public function getAllInCategory($id){
+    public function getAllInCategory($id) {
         (new IDMustBePostiveInt())->goCheck();
         $products = productModel::getProductsByCategoryID($id);
-        if($products->isEmpty()){
+        if ($products->isEmpty()) {
             throw new CategoryException();
         }
         return $products;
     }
+
+    public function getOne($id) {
+        (new IDMustBePostiveInt())->goCheck();
+        $product = productModel::getProductDetail($id);
+        if (!$product) {
+            throw new ProductException();
+        }
+        return $product;
+    }
+
 }

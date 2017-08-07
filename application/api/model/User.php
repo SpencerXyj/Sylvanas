@@ -10,5 +10,10 @@ namespace app\api\model;
 
 
 class User extends BaseModel {
+    public static function getByOpenID($openID) {
+        $user = self::where('openid', '=', $openID)->find();
+        return $user;
+    }
+
 
 }
