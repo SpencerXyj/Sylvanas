@@ -2,3 +2,6 @@
 composer.lock
 *.log
 thinkphp
+.project
+application/api/controller/v1/Banner.php
+application/database.php

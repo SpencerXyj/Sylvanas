@@ -12,6 +12,7 @@
 use think\Route;
 
 Route::get('api/:version/banner/:id'                    ,   'api/:version.Banner/getBanner', [], ['id' => '\d+']);
+
 Route::get('api/:version/theme'                         ,   'api/:version.Theme/getSimpleThemes');
 Route::get('api/:version/theme/:id'                     ,   'api/:version.Theme/getComplexOne', [], ['id' => '\d+']);
 Route::get('api/:version/product/recent'                ,   'api/:version.Product/getRecent');
@@ -25,3 +26,4 @@ Route::group('api/:version/product/',function(){
 });
 Route::get('api/:version/category/all'                  ,   'api/:version.Category/getAllCategories');
 Route::post('api/:version/token/user'                   ,   'api/:version.Token/getToken');
+Route::post('api/:version/address'                      ,   'api/:version.Address/createOrUpdateAddress');

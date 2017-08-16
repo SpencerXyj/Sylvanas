@@ -24,8 +24,4 @@ class Banner {
         return $banner;
     }
 
-    public function aaa(){
-        return "aa";
-    }
-
 }

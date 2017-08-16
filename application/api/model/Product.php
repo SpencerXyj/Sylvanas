@@ -9,39 +9,54 @@
 namespace app\api\model;
 
 
-class Product extends BaseModel {
-    protected $hidden = ['update_time', 'delete_time', 'create_time',
-        'pivot', 'from', 'category_id'];
+class Product extends BaseModel
+{
+    protected $hidden = [
+        'update_time',
+        'delete_time',
+        'create_time',
+        'pivot',
+        'from',
+        'category_id',
+    ];
 
-    public function imgs() {
+    public function imgs()
+    {
         return $this->hasMany('ProductImage', 'product_id', 'id');
     }
 
-    public function property() {
+    public function property()
+    {
         return $this->hasMany('ProductProperty', 'product_id', 'id');
     }
 
-    public function getMainImgUrlAttr($name, $value) {
+    public function getMainImgUrlAttr($name, $value)
+    {
         return self::prefixImgUrl($name, $value);
     }
 
-    public static function getMostRecent($count) {
+    public static function getMostRecent($count)
+    {
         $product = self::limit($count)->order("create_time desc")->select();
+
         return $product;
     }
 
-    public static function getProductsByCategoryID($CategoryID) {
+    public static function getProductsByCategoryID($CategoryID)
+    {
         $products = self::where("category_id", "=", $CategoryID)->select();
+
         return $products;
     }
 
-    public static function getProductDetail($id) {
+    public static function getProductDetail($id)
+    {
         $product = self::with([
             'imgs' => function ($query) {
                 $query->with('imageUrl')->order('order', 'asc');
-            }
-        ])
-            ->with('property')->find($id);
+            },
+        ])->with('property')->find($id);
+
         return $product;
     }
 
