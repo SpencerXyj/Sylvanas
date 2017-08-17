@@ -15,15 +15,27 @@ Route::get('api/:version/banner/:id'                    ,   'api/:version.Banner
 
 Route::get('api/:version/theme'                         ,   'api/:version.Theme/getSimpleThemes');
 Route::get('api/:version/theme/:id'                     ,   'api/:version.Theme/getComplexOne', [], ['id' => '\d+']);
-Route::get('api/:version/product/recent'                ,   'api/:version.Product/getRecent');
-Route::get('api/:version/product/by_category/:id'       ,   'api/:version.Product/getAllInCategory');
-Route::get('api/:version/product/:id'                   ,   'api/:version.Product/getOne', [], ['id'=>'\d+']);
 
 Route::group('api/:version/product/',function(){
-    Route::get('recent'                ,   'api/:version.Product/getRecent');
-    Route::get('by_category/:id'       ,   'api/:version.Product/getAllInCategory');
-    Route::get(':id'                   ,   'api/:version.Product/getOne', [], ['id'=>'\d+']);
+    Route::get('recent'                                 ,   'api/:version.Product/getRecent');
+    Route::get('by_category/:id'                        ,   'api/:version.Product/getAllInCategory');
+    Route::get(':id'                                    ,   'api/:version.Product/getOne', [], ['id'=>'\d+']);
+    Route::get('deleteOne/:id'                          ,   'api/:version.Product/deleteOne');
 });
+
 Route::get('api/:version/category/all'                  ,   'api/:version.Category/getAllCategories');
+
 Route::post('api/:version/token/user'                   ,   'api/:version.Token/getToken');
+
 Route::post('api/:version/address'                      ,   'api/:version.Address/createOrUpdateAddress');
+
+
+
+
+
+
+
+
+
+
+Route::post('api/:version/test'                       ,   'api/:version.Test/test');

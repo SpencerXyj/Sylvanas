@@ -9,8 +9,9 @@
 namespace app\lib\exception;
 
 
-class WebChatException extends BaseException {
+class WeChatException extends BaseException
+{
     public $code = 400;
     public $errorCode = 999;
-    public $msg = "微信服务器接口调用失败";
+    public $msg = "WeChat server interface call failed";
 }

@@ -11,7 +11,7 @@ namespace app\api\service;
 
 use app\api\model\User as UserModel;
 use app\lib\exception\TokenException;
-use app\lib\exception\WebChatException;
+use app\lib\exception\WeChatException;
 use think\Exception;
 
 class UserToken extends Token {
@@ -89,7 +89,7 @@ class UserToken extends Token {
     }
 
     private function processLoginError($wxResult) {
-        throw new WebChatException([
+        throw new WeChatException([
             'errorCode' => $wxResult['errcode'],
             'msg' => $wxResult['errmsg'],
         ]);

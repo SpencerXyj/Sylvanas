@@ -13,7 +13,7 @@ class AddressNew extends BaseValidate
 {
     protected $rule = [
         'name'     => 'require|isNotEmpty',
-        'mobile'   => 'require|isNotEmpty',
+        'mobile'   => 'MustBeMobile|isNotEmpty',
         'province' => 'require|isNotEmpty',
         'city'     => 'require|isNotEmpty',
         'country'  => 'require|isNotEmpty',
@@ -23,7 +23,6 @@ class AddressNew extends BaseValidate
     protected $message = [
         'name.require'        => 'name is require',
         'name.isNotEmpty'     => 'name is not empty',
-        'mobile.require'      => 'mobile is require',
         'mobile.isNotEmpty'   => 'mobile is not empty',
         'province.require'    => 'province is require',
         'province.isNotEmpty' => 'province is not empty',
