@@ -29,13 +29,3 @@ Route::post('api/:version/token/user'                   ,   'api/:version.Token/
 
 Route::post('api/:version/address'                      ,   'api/:version.Address/createOrUpdateAddress');
 
-
-
-
-
-
-
-
-
-
-Route::post('api/:version/test'                       ,   'api/:version.Test/test');

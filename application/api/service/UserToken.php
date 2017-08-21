@@ -10,25 +10,28 @@ namespace app\api\service;
 
 
 use app\api\model\User as UserModel;
+use app\lib\enum\ScopeEnum;
 use app\lib\exception\TokenException;
 use app\lib\exception\WeChatException;
 use think\Exception;
 
-class UserToken extends Token {
+class UserToken extends Token
+{
     protected $code;
     protected $wxAppID;
     protected $wxAppSecret;
     protected $loginUrl;
 
-    function __construct($code) {
+    function __construct($code)
+    {
         $this->code = $code;
         $this->wxAppID = config("weixin.app_id");
         $this->wxAppSecret = config("weixin.app_secret");
-        $this->loginUrl = sprintf(config("weixin.login_url"),
-            $this->wxAppID, $this->wxAppSecret, $this->code);
+        $this->loginUrl = sprintf(config("weixin.login_url"), $this->wxAppID, $this->wxAppSecret, $this->code);
     }
 
-    public function get() {
+    public function get()
+    {
         $result = curl_get($this->loginUrl);
         $wxResult = json_decode($result, true);
         if (empty($wxResult)) {
@@ -39,12 +42,14 @@ class UserToken extends Token {
                 self::processLoginError($wxResult);
             } else {
                 $token = self::grantToken($wxResult);
+
                 return $token;
             }
         }
     }
 
-    private function grantToken($wxResult) {
+    private function grantToken($wxResult)
+    {
         //获取openid
         $openid = $wxResult['openid'];
         //查询数据库openid是否存在
@@ -59,39 +64,55 @@ class UserToken extends Token {
         //存入缓存  key:token  value:$wxResult uid scope
         $cachedValue = self::prepareCachedValue($wxResult, $uid);
         $token = self::saveToCache($cachedValue);
+
         return $token;
     }
 
-    private function saveToCache($cachedValue) {
+    private function saveToCache($cachedValue)
+    {
         $key = self::generateToken();
         $value = json_encode($cachedValue);
         $expire_in = config('setting.token_expire_in');
         $result = cache($key, $value, $expire_in);
         if (!$result) {
             throw new TokenException([
-                'msg' => 'cache error',
-                'errorCode' => 10005
+                'msg'       => 'cache error',
+                'errorCode' => 10005,
             ]);
         }
+
         return $key;
     }
 
-    private function prepareCachedValue($wxResult, $uid, $scope = 16) {
+    /**
+     * @param     $wxResult
+     * @param     $uid
+     * @param int $scope 16为app用户  32为admin管理员
+     *
+     * @return mixed
+     */
+    private function prepareCachedValue($wxResult, $uid)
+    {
         $cachedValue = $wxResult;
         $cachedValue['uid'] = $uid;
-        $cachedValue['scope'] = $scope;
+        //$cachedValue['scope'] = ScopeEnum::User;
+        $cachedValue['scope'] = 10;
+
         return $cachedValue;
     }
 
-    private function newUser($openid) {
+    private function newUser($openid)
+    {
         $user = UserModel::create(['openid' => $openid]);
+
         return $user->id;
     }
 
-    private function processLoginError($wxResult) {
+    private function processLoginError($wxResult)
+    {
         throw new WeChatException([
             'errorCode' => $wxResult['errcode'],
-            'msg' => $wxResult['errmsg'],
+            'msg'       => $wxResult['errmsg'],
         ]);
     }
 }
