@@ -13,6 +13,8 @@ use app\lib\exception\TokenException;
 use think\Cache;
 use think\Exception;
 use think\Request;
+use app\lib\enum\ScopeEnum;
+use app\lib\exception\ForbiddenException;
 
 class Token
 {
@@ -47,6 +49,36 @@ class Token
             } else {
                 throw new Exception('the value is not in token');
             }
+        }
+    }
+
+    //用户及管理员
+    public static function checkPrimaryScope()
+    {
+        $scope = self::getCurrentTokenVar('scope');
+        if ($scope) {
+            if ($scope >= ScopeEnum::User) {
+                return true;
+            } else {
+                throw new ForbiddenException();
+            }
+        } else {
+            throw new TokenException();
+        }
+    }
+
+    //用户访问
+    public static function checkExclusiveScope()
+    {
+        $scope = self::getCurrentTokenVar('scope');
+        if ($scope) {
+            if ($scope == ScopeEnum::User) {
+                return true;
+            } else {
+                throw new ForbiddenException();
+            }
+        } else {
+            throw new TokenException();
         }
     }
 }
