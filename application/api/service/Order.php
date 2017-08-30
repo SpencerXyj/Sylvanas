@@ -9,8 +9,14 @@
 namespace app\api\service;
 
 
+use app\api\model\OrderProduct;
 use app\api\model\Product;
+use app\api\model\UserAddress;
 use app\lib\exception\OrderException;
+use app\lib\exception\UserException;
+use think\Db;
+use think\Exception;
+
 
 class Order
 {
@@ -34,8 +40,102 @@ class Order
             return $status;
         }
         //创建订单
+        //订单快照
+        $orderSnap = $this->snapOrder($status);
+        $order = $this->createOrder($orderSnap);
+        $order['pass'] = true;
 
+        return $order;
+    }
 
+    private function createOrder($orderSnap)
+    {
+        //事务开启
+        Db::startTrans();
+        try {
+            $orderNo = self::makeOrderNo();
+            $order = new \app\api\model\Order();
+            $order->order_no = $orderNo;
+            $order->user_id = $this->uid;
+            $order->total_price = $orderSnap['orderPrice'];
+            $order->snap_img = $orderSnap['snapImg'];
+            $order->snap_name = $orderSnap['snapName'];
+            $order->total_count = $orderSnap['totalCount'];
+            $order->snap_address = $orderSnap['snapAddress'];
+            $order->snap_items = json_encode($orderSnap['pStatus']);
+
+            $order->save();
+            $orderID = $order->id;
+            foreach ($this->oProducts as $key => &$p) {
+                $p['order_id'] = $orderID;
+            }
+
+            $orderProduct = new OrderProduct();
+            $orderProduct->saveAll($this->oProducts);
+            //提交
+            Db::commit();
+
+            return [
+                'order_id'    => $order->id,
+                'order_no'    => $order->order_no,
+                'create_time' => $order->create_time,
+            ];
+        } catch (Exception $e) {
+            //回滚
+            Db::rollback();
+            throw $e;
+        }
+    }
+
+    public static function makeOrderNo()
+    {
+        $yCode = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $max = strlen($yCode) - 1;
+        /*$orderSn = $yCode[intval(date('Y')) - '2017'] . strtoupper(dechex(date('m'))) . date('d') . substr(time(),
+                -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));*/
+        $orderSn = $yCode[rand(0, $max)] . strtoupper(dechex(date('m'))) . date('d') . substr(time(),
+                -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
+
+        return $orderSn;
+    }
+
+    private function snapOrder($status)
+    {
+        $snap = [
+            'orderPrice'  => 0,
+            'totalCount'  => 0,
+            'pStatus'     => [],
+            'snapAddress' => null,
+            'snapName'    => '',
+            'snapImg'     => '',
+        ];
+
+        $snap['orderPrice'] = $status['orderPrice'];
+        $snap['totalCount'] = $status['totalCount'];
+        $snap['pStatus'] = $status['pStatusArray'];
+        $snap['snapAddress'] = json_encode($this->getUserAddress());
+        $snap['snapName'] = $this->products[0]['name'];
+        $snap['snapImg'] = $this->products[0]['main_img_url'];
+
+        if (count($this->products) > 1) {
+            $snap['snapName'] .= '等';
+        }
+
+        return $snap;
+
+    }
+
+    private function getUserAddress()
+    {
+        $userAddress = UserAddress::where('user_id', '=', $this->uid)->find();
+        if (!$userAddress) {
+            throw new UserException([
+                'errorCode' => 60001,
+                'msg'       => 'user address is not found',
+            ]);
+        }
+
+        return $userAddress->toArray();
     }
 
     private function getProductByOrder($oProducts)
@@ -53,6 +153,7 @@ class Order
             'pass'         => true,
             'orderPrice'   => 0,
             'pStatusArray' => [],
+            'totalCount'   => 0,
         ];
 
         foreach ($this->oProducts as $key => $oProduct) {
@@ -61,9 +162,11 @@ class Order
                 $status['pass'] = false;
             }
             $status['orderPrice'] += $pStatus['totalPrice'];
+            $status['totalCount'] += $pStatus['count'];;
             array_push($status['pStatusArray'], $pStatus);
-
         }
+
+        return $status;
 
     }
 
