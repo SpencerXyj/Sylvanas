@@ -14,11 +14,13 @@ use app\api\service\Token as TokenService;
 
 class BaseController extends Controller
 {
+    // >=USER
     public function checkPrimaryScope()
     {
         TokenService::checkPrimaryScope();
     }
 
+    // ==USER
     public function checkExclusiveScope()
     {
         TokenService::checkExclusiveScope();

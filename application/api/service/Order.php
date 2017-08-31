@@ -33,6 +33,7 @@ class Order
         $this->oProducts = $oProducts;
         $this->uid = $uid;
         $this->products = $this->getProductByOrder($oProducts);
+        //库存量检测
         $status = $this->getOrderStatus();
         if (!$status['pass']) {
             $status['order_id'] = -1;
@@ -147,6 +148,7 @@ class Order
 
     }
 
+    //库存量检测
     private function getOrderStatus()
     {
         $status = [
@@ -201,6 +203,19 @@ class Order
         }
 
         return $pStatus;
+    }
+
+    public function checkOrderStock($orderID)
+    {
+        //$oProduct
+        $oProduct = OrderProduct::where('order_id', '=', $orderID)->select();
+        $this->oProducts = $oProduct;
+        //$procudt
+        $product = $this->getProductByOrder($oProduct);
+        $this->products = $product;
+        $status = $this->getOrderStatus();
+
+        return $status;
     }
 
 
