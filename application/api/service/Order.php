@@ -141,7 +141,7 @@ class Order
 
     private function getProductByOrder($oProducts)
     {
-        $oPIDs = array_column($oProducts, 'protuct_id');
+        $oPIDs = array_column($oProducts, 'product_id');
         $products = Product::all($oPIDs)->visible(['id', 'price', 'stock', 'name', 'main_img_url'])->toArray();
 
         return $products;
@@ -211,7 +211,7 @@ class Order
         $oProduct = OrderProduct::where('order_id', '=', $orderID)->select();
         $this->oProducts = $oProduct;
         //$procudt
-        $product = $this->getProductByOrder($oProduct);
+        $product = $this->getProductByOrder($oProduct->toArray());
         $this->products = $product;
         $status = $this->getOrderStatus();
 

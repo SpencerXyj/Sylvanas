@@ -31,4 +31,5 @@ Route::post('api/:version/address'                      ,   'api/:version.Addres
 
 Route::post('api/:version/order'                        ,   'api/:version.Order/placeOrder');
 
-Route::post('api/:version/order/pay/pre_pay'            ,   'api/:version.Pay/getPreOrder');
+Route::post('api/:version/pay/pre_order'                ,   'api/:version.Pay/getPreOrder');
+Route::post('api/:version/pay/notify'                   ,   'api/:version.Pay/receiveNotify');

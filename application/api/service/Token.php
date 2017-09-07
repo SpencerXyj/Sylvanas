@@ -52,6 +52,21 @@ class Token
         }
     }
 
+    public static function isValidOperate($checkedUID)
+    {
+        if (!$checkedUID) {
+            throw new Exception('checked UID can not be empty');
+        }
+
+        $currentOperateUID = self::getCurrentUid();
+
+        if ($currentOperateUID != $checkedUID) {
+            return false;
+        }
+
+        return true;
+    }
+
     //用户及管理员
     public static function checkPrimaryScope()
     {
@@ -67,7 +82,7 @@ class Token
         }
     }
 
-    //用户访问
+    //仅用户
     public static function checkExclusiveScope()
     {
         $scope = self::getCurrentTokenVar('scope');
