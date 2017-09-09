@@ -28,7 +28,8 @@ class WxNotify extends \WxPayNotify
         //减库存
         //向微信返回处理成功消息  如果发生异常,返回处理失败
         /**
-         *  <xml>
+         * 微信回调信息
+         * <xml>
          * <appid><![CDATA[wx2421b1c4370ec43b]]></appid>
          * <attach><![CDATA[支付测试]]></attach>
          * <bank_type><![CDATA[CFT]]></bank_type>
