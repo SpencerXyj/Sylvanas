@@ -8,4 +8,5 @@
 
 return [
     'token_salt' => 'Spencer',
+    'pay_back_url' => 'http://sylvanas.com/api/:version/pay/notify',
 ];

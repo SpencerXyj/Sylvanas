@@ -14,8 +14,8 @@ use app\lib\exception\OrderException;
 use app\api\model\Order as OrderModel;
 use app\api\service\Order as OrderService;
 use app\lib\exception\TokenException;
-use think\Loader;
 use think\Log;
+use think\Loader;
 
 
 Loader::import('WxPay.WxPay', EXTEND_PATH, '.Api.php');
@@ -59,7 +59,7 @@ class Pay
         $wxOrderData->SetTrade_type('JSAPI');
         $wxOrderData->SetTotal_fee($totalPrice * 100);
         $wxOrderData->SetBody("零食商贩");
-        $wxOrderData->SetNotify_url('http://www.baidu.com');
+        $wxOrderData->SetNotify_url(config('secure.pay_back_url'));
 
         $rawValues = $this->getPayRawValues($wxOrderData);
 
