@@ -10,8 +10,12 @@ namespace app\api\controller\v1;
 
 
 use app\api\controller\BaseController;
+use app\api\validate\IDMustBePostiveInt;
 use app\api\validate\OrderPlace;
 use app\api\service\Token as TokenService;
+use app\api\validate\PagingParameter;
+use app\api\model\Order as OrderModel;
+use app\lib\exception\OrderException;
 
 class Order extends BaseController
 {
@@ -35,6 +39,7 @@ class Order extends BaseController
 
     protected $beforeActionList = [
         'checkExclusiveScope' => ['only' => 'placeOrder'],
+        'checkPrimaryScope'   => ['only' => 'getSummaryByUser,getDetail'],
     ];
 
     public function placeOrder()
@@ -47,5 +52,38 @@ class Order extends BaseController
         return $result;
     }
 
+    public function getSummaryByUser($page = 1, $size = 15)
+    {
+        (new PagingParameter())->goCheck();
+        $uid = TokenService::getCurrentUid();
+
+        $summaryOrders = OrderModel::getSummaryByUser($uid, $page, $size);
+        if ($summaryOrders->isEmpty()) {
+            return [
+                'data'         => [],
+                'current_page' => $summaryOrders::getCurrentPage(),
+            ];
+        }
+
+        $data = $summaryOrders->hidden(['snap_items', 'snap_address', 'prepay_id'])->toArray();
+
+        return [
+            'data'         => $data,
+            'current_page' => $summaryOrders::getCurrentPage(),
+        ];
+    }
+
+    public function getDetail($id)
+    {
+        (new IDMustBePostiveInt())->goCheck();
+        $orderDetail = OrderModel::get($id);
+
+        if (!$orderDetail) {
+            throw new OrderException();
+        }
+
+        return $orderDetail->hidden(['prepay_id'])->toArray();
+
+    }
 
 }
